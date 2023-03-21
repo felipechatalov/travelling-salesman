@@ -53,10 +53,8 @@ def path_distance(path, citys):
     return distance
 
 def mutate(population, mutation_rate):
-    # print("len pop", len(population))
     mutations = int(len(population)*mutation_rate)
     cromosome_mutations = 1
-    # print("mutations", mutations)
     new_population = []
     for i in range(len(population)):
 
@@ -72,9 +70,10 @@ def mutate(population, mutation_rate):
         else:
             new_population.append(population[i])
 
+
     return new_population
 
-def genetic_salesman(citys, population_size, mutation_rate, screen):
+def genetic_salesman(citys, population_size, mutation_rate, screen, draw=True):
     population = [generate_random_path(citys) for _ in range(population_size)]
     best_path_ever = population[0]
     itr = 0
@@ -85,7 +84,8 @@ def genetic_salesman(citys, population_size, mutation_rate, screen):
         if path_distance(population[0], citys) < path_distance(best_path_ever, citys):
             best_path_ever = population[0].copy()
         
-        draw_path(population[0], citys, screen)
+        if draw:
+            draw_path(population[0], citys, screen, 0.1)
 
         population = mutate(population, mutation_rate)
     print(best_path_ever)
@@ -100,7 +100,7 @@ citys = []
 # for _ in range(10):
 #     citys.append(Node(random.randint(0, width), random.randint(0, height)))
 
-def draw_path(path, citys, screen):
+def draw_path(path, citys, screen, sleep_time):
     screen.fill(black)
     for i in range(len(citys)):
         pygame.draw.circle(screen, green, (citys[i].x, citys[i].y), 5)
@@ -113,7 +113,7 @@ def draw_path(path, citys, screen):
         else:
             pygame.draw.line(screen, blue, (citys[path[i]].x, citys[path[i]].y), (citys[path[i + 1]].x, citys[path[i + 1]].y), 1)
     pygame.display.update()
-    # time.sleep(0.1)
+    time.sleep(sleep_time)
 
 
 best_path = []
@@ -147,7 +147,7 @@ while not gameover:
         for i in range(len(citys)):
             pygame.draw.circle(screen, green, (citys[i].x, citys[i].y), 5)
 
-        draw_path(best_path, citys, screen)
+        draw_path(best_path, citys, screen, 0)
         pygame.display.update()
 
     clock.tick_busy_loop(60)
